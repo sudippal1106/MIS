@@ -42,11 +42,15 @@ const database = require(`./src/model`);
 
 database.sequelize.sync();
 
-const defaultURL = "/api/v1";
+const defaultURL = "/api";
 
 const employeeTask = require("./src/route/employeetask.route");
+const clientDetail = require("./src/route/clientdetail.route");
+const bgaDetail = require("./src/route/bgadetail.route");
 
 app.use(defaultURL, employeeTask);
+app.use(defaultURL, clientDetail);
+app.use(defaultURL, bgaDetail);
 
 app.listen(PORT, () => {
   console.log(`${ProjectName} Server is running on port ${PORT}.`);

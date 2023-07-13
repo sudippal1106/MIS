@@ -18,5 +18,8 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.employee_tasks = require("./employeetask.model")(sequelize, Sequelize);
+db.client_details = require("./clientdetail.model")(sequelize, Sequelize);
+db.bga_details = require("./bgadetail.model")(sequelize, Sequelize);
+
 
 module.exports = db;

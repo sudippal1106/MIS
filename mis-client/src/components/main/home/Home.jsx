@@ -1,59 +1,120 @@
-import React from "react";
+import React ,{ useState,useEffect}from "react";
 import "./home.css";
 
-const Home = () => {
-  return (
-    <div>
-      <main>
-        <div className="intro">
-          <h1>MIS Websites</h1>
-          <p>I am a web developer and I love to create websites.</p>
-          <button>Learn More</button>
-        </div>
-        <div className="achievements">
-          <div className="work">
-            <i className="fas fa-atom"></i>
-            <p className="work-heading">Projects</p>
-            <p className="work-text">
-              I have worked on many projects and I am very proud of them. I am a
-              very good developer and I am always looking for new projects.
-            </p>
-          </div>
-          <div className="work">
-            <i className="fas fa-skiing"></i>
-            <p className="work-heading">Skills</p>
-            <p className="work-text">
-              I have a lot of skills and I am very good at them. I am very good
-              at programming and I am always looking for new skills.
-            </p>
-          </div>
-          <div className="work">
-            <i className="fas fa-ethernet"></i>
-            <p className="work-heading">Network</p>
-            <p className="work-text">
-              I have a lot of network skills and I am very good at them. I am
-              very good at networking and I am always looking for new network
-              skills.
-            </p>
-          </div>
-        </div>
-        <div className="about-me">
-          <div className="about-me-text">
-            <h2>About Me</h2>
-            <p>
-              I am a web developer and I love to create websites. I am a very
-              good developer and I am always looking for new projects. I am a
-              very good developer and I am always looking for new projects.
-            </p>
-          </div>
-          <img
-            src="https://images.unsplash.com/photo-1596495578065-6e0763fa1178?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80"
-            alt="me"
-          />
-        </div>
-      </main>
-    </div>
-  );
+import { useTheme } from '@mui/material/styles';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import { useNavigate }  from 'react-router-dom';
+
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
 };
 
-export default Home;
+// useEffect(()=>{
+//   fetch("http://localhost:7000/api/vi/employeetasks").then((data)=>data.json()).then((val)=>setValues(val))
+// },[])
+
+// const names = [
+//  ' HR ',
+//  ' Applications',
+//  ' Case Management',
+//   'Commissions',
+//  ' Life Settlement',
+//  ' Licensing & Contracting',
+//   'US Calling Team',
+//   'Special Project',
+//  ' Mortgage'
+  
+// ];
+
+function getStyles(name, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(name) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+
+export default function Home() {
+
+  const [values,setValues]=useState([]);
+  useEffect(()=>{
+
+    const getcategory=async()=>{
+      const res= await fetch('http://localhost:7000/api/employeetasks');
+      const getdata = await res.json();
+      setValues(getdata);
+      console.log(getdata);
+    }
+    getcategory();
+  },[])
+  const theme = useTheme();
+  const [personName, setPersonName] = React.useState([]);
+  const navigate = useNavigate();
+
+
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
+
+  const handleNextClick = () => {
+    if (personName.includes('Task1')) {
+      navigate('/application'); 
+    }
+  
+  };
+
+  return (
+    <main>
+    <div className="intro">
+    <h1>Welcome to EPR MIS System</h1>
+    </div>
+    <div>
+   
+      <FormControl sx={{ m: 1, width: 300,mt:5,ml:80 }}>
+        <InputLabel id="demo-multiple-name-label">MIS</InputLabel>
+        <Select
+                value={personName}
+                onChange={handleChange}
+             
+                input={<OutlinedInput />}
+                MenuProps={MenuProps}
+              >
+                {values.map((e) => (
+                  <MenuItem
+                    key={e.TaskId}
+                    value={e.Name}
+                    style={getStyles(e.Name, personName, theme)}
+                  >
+                    {e.Name}
+                  </MenuItem>
+                ))}
+              </Select>
+
+        <Button className ="button" sx={{mt:4}} variant="contained" onClick={handleNextClick} >NEXT</Button>
+      </FormControl>
+    </div>
+    </main>
+  );
+}
