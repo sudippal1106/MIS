@@ -5,7 +5,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-
+//route
 import Home from "./components/main/home/Home";
 import About from "./components/main/about/About";
 import Contact from "./components/main/contact/Contact";
