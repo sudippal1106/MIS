@@ -1,8 +1,9 @@
 const db = require("../model");
 const BgaDetails = db.bga_details;
 
+//get all BGA
 exports.All_BgaDetails = (req, res) => {
-    BgaDetails.findAll()
+  BgaDetails.findAll()
     .then((result) => {
       return res.status(200).send(result);
     })
@@ -11,21 +12,24 @@ exports.All_BgaDetails = (req, res) => {
     });
 };
 
+// create NEW BGA
 exports.New_BgaDetails = (req, res) => {
-    BgaDetails.create(req.body)
-      .then((result) => {
-        return res.status(200).send(result);
-        console.log("heee2")
-      })
-      .catch((err) => {
-        console.log("heee11")
-        // logger.error("Error in BgaDetails");
-        // logger.error(err.message);
-        res.status(500).send({
-          message: err.message,
-        });
+  // console.log("BGA is ", req.body);
+  BgaDetails.bulkCreate(req.body)
+    .then((result) => {
+      return res.status(200).json({
+        status: "success",
+        data: result,
       });
-  };
+    })
+    .catch((err) => {
+      res.status(500).json({
+        status: "error",
+        message: err.message,
+      });
+    });
+};
+
 // exports.BgaDetails_id = (req, res) => {
 //   const BGAID = req.params.id;
 //   BgaDetails.findOne({
