@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./home.css";
-
+import departmentServices from "../../../services/department.service";
 import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -21,23 +21,6 @@ const MenuProps = {
   },
 };
 
-// useEffect(()=>{
-//   fetch("http://localhost:7000/api/vi/employeetasks").then((data)=>data.json()).then((val)=>setValues(val))
-// },[])
-
-// const names = [
-//  ' HR ',
-//  ' Applications',
-//  ' Case Management',
-//   'Commissions',
-//  ' Life Settlement',
-//  ' Licensing & Contracting',
-//   'US Calling Team',
-//   'Special Project',
-//  ' Mortgage'
-
-// ];
-
 function getStyles(name, personName, theme) {
   return {
     fontWeight:
@@ -49,32 +32,32 @@ function getStyles(name, personName, theme) {
 
 export default function Home() {
   const [values, setValues] = useState([]);
-
-  useEffect(() => {
-    const getcategory = async () => {
-      const res = await fetch("http://localhost:7000/api/employeetasks");
-      const getdata = await res.json();
-      setValues(getdata);
-      console.log(getdata);
-    };
-    getcategory();
-  }, []);
+  const [department, setDepartment] = React.useState([]);
+  const [selectDepartment, setSelectDepartment] = React.useState(null);
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getDepartment = async () => {
+      try {
+        const result = await departmentServices.getDepartments();
+        setDepartment(result.data.data);
+        console.log("response department", result.data);
+      } catch (err) {
+        console.log("error occured", err);
+      }
+    };
+    getDepartment();
+  }, []);
+
   const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setSelectDepartment(event.target.value);
   };
 
   const handleNextClick = () => {
-    if (personName.includes("DataEntry")) {
+    if (selectDepartment === 1) {
+      navigate("/hr");
+    } else if (selectDepartment === 2) {
       navigate("/application");
     }
   };
@@ -88,16 +71,16 @@ export default function Home() {
         <FormControl sx={{ m: 1, width: 300, mt: 5, ml: 80 }}>
           <InputLabel id="demo-multiple-name-label">MIS</InputLabel>
           <Select
-            value={personName}
+            value={selectDepartment}
             onChange={handleChange}
             input={<OutlinedInput />}
             MenuProps={MenuProps}
           >
-            {values.map((e) => (
+            {department?.map((e) => (
               <MenuItem
-                key={e.TaskId}
-                value={e.Name}
-                style={getStyles(e.Name, personName, theme)}
+                key={e.DepartmentID}
+                value={e.DepartmentID}
+                // style={getStyles(e.Name, personName, theme)}
               >
                 {e.Name}
               </MenuItem>

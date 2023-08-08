@@ -22,6 +22,7 @@ import MUISnackbar from "../../../common/snackbar/Snackbar";
 import EmployeeTaskService from "../../../../services/employeetask.service";
 
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -100,6 +101,7 @@ export default function App() {
   const [personName, setPersonName] = React.useState([]);
   const [clientId, setClientId] = React.useState(null);
   const [employeeTaskDetails, setEmployeeTaskDetails] = React.useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getcategory = async () => {
@@ -210,34 +212,59 @@ export default function App() {
         yposition={yposition}
       />
 
-      <FormControl sx={{ m: 1, width: 300, mt: 5, ml: 73 }}>
-        <InputLabel id="demo-multiple-name-label">BGA</InputLabel>
-        <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          value={clientId}
-          onChange={handleChangeClient}
-          input={<OutlinedInput label="Name" />}
-          MenuProps={MenuProps}
-        >
-          {values.map((e) => (
-            <MenuItem
-              key={e.ClientID}
-              value={e.ClientID}
-              style={getStyles(e.Name, personName, theme)}
+      <div style={{ display: "flex", justifyContent: "right" }}>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate("/application/dashboard");
+            }}
+          >
+            Report & Dashboard
+          </Button>
+        </div>
+      </div>
+
+      <div
+        style={{
+          border: "1px solid red",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div>
+          <FormControl sx={{ m: 1, width: 300 }}>
+            <InputLabel id="demo-multiple-name-label">BGA</InputLabel>
+            <Select
+              labelId="demo-multiple-name-label"
+              id="demo-multiple-name"
+              value={clientId}
+              onChange={handleChangeClient}
+              input={<OutlinedInput label="Name" />}
+              MenuProps={MenuProps}
             >
-              {e.Name}
-            </MenuItem>
-          ))}
-        </Select>
-        <Button
-          sx={{ m: 1, width: 200, height: 52, mt: -6.8, ml: 40 }}
-          variant="contained"
-          onClick={handleOpen}
-        >
-          <b>Add Data</b>
-        </Button>
-      </FormControl>
+              {values.map((e) => (
+                <MenuItem
+                  key={e.ClientID}
+                  value={e.ClientID}
+                  style={getStyles(e.Name, personName, theme)}
+                >
+                  {e.Name}
+                </MenuItem>
+              ))}
+            </Select>
+            <Button
+              sx={{ m: 1, width: 200, height: 52, mt: -6.8, ml: 40 }}
+              variant="contained"
+              onClick={handleOpen}
+            >
+              <b>Add Data</b>
+            </Button>
+          </FormControl>
+        </div>
+      </div>
+
       {isAddBgaClicked && (
         <Formik
           initialValues={initialRow}
@@ -356,6 +383,7 @@ export default function App() {
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
+                  <StyledTableCell align="center">ClientName</StyledTableCell>
                   <StyledTableCell align="center">Data Entry</StyledTableCell>
                   <StyledTableCell align="center">Niago Scrub</StyledTableCell>
                   <StyledTableCell align="center">
@@ -368,15 +396,18 @@ export default function App() {
                   <StyledTableCell align="center">
                     Carrier Scrub
                   </StyledTableCell>
+
                   <StyledTableCell align="center">
                     Submission(min)
                   </StyledTableCell>
-                  <StyledTableCell align="center">ClientName</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {newRows.map((row, index) => (
                   <StyledTableRow key={index}>
+                    <StyledTableCell align="center">
+                      {values.find((el) => el.ClientID === row.ClientID).Name}
+                    </StyledTableCell>
                     <StyledTableCell align="center">
                       {row.DataEntry}
                     </StyledTableCell>
@@ -397,9 +428,6 @@ export default function App() {
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {row.Submission}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {values.find((el) => el.ClientID === row.ClientID).Name}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

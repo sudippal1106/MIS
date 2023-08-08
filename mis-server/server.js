@@ -47,10 +47,12 @@ const defaultURL = "/api";
 const employeeTask = require("./src/route/employeetask.route");
 const clientDetail = require("./src/route/clientdetail.route");
 const bgaDetail = require("./src/route/bgadetail.route");
+const departments = require("./src/route/department.route");
 
 app.use(defaultURL, employeeTask);
 app.use(defaultURL, clientDetail);
 app.use(defaultURL, bgaDetail);
+app.use(defaultURL, departments);
 
 app.listen(PORT, () => {
   console.log(`${ProjectName} Server is running on port ${PORT}.`);

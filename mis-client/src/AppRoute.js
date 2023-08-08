@@ -2,15 +2,16 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
-  useLocation,
+  // useNavigate,
+  // useLocation,
 } from "react-router-dom";
 
 import Home from "./components/main/home/Home";
 import About from "./components/main/about/About";
 import Contact from "./components/main/contact/Contact";
 import Track from "./components/main/track/Track";
-import Application from "./components/main/Departments/Application/application"
+import Application from "./components/main/Departments/Application/application";
+import BGADashboard from "./components/main/dashboard/BGADashboard";
 
 const AppRoute = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoute = () => {
         <Route exact path="/track" element={<Track />} />
         <Route exact path="/contact" element={<Contact />} />
         <Route exact path="/application" element={<Application />} />
+        <Route exact path="/application/dashboard" element={<BGADashboard />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </div>
