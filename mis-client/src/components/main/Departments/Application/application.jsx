@@ -76,12 +76,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 //initial value
 const initialRow = {
-  DataEntry: 0,
-  Niagoscrub: 0,
-  Examordering: 0,
-  Doctyping: 0,
-  Apsscrubbing: 0,
-  Carrierscrub: 0,
+  DataEntry: null,
+  Niagoscrub: null,
+  Examordering: null,
+  Doctyping: null,
+  Apsscrubbing: null,
+  Carrierscrub: null,
   // Submission: 0,
 };
 
@@ -93,7 +93,6 @@ export default function App() {
   const [xposition, setXposition] = React.useState("");
   const [yposition, setYposition] = React.useState("");
 
-  const [rows, setRows] = useState([]);
   const [newRows, setNewRows] = useState([]);
   const [values, setValues] = useState([]);
   const [open, setOpen] = useState(false);
@@ -101,6 +100,7 @@ export default function App() {
   const [personName, setPersonName] = React.useState([]);
   const [clientId, setClientId] = React.useState(null);
   const [employeeTaskDetails, setEmployeeTaskDetails] = React.useState([]);
+  const [toggleInputTable, setToggleInputTable] = React.useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -132,8 +132,6 @@ export default function App() {
 
   //submit
   const handleSubmit = (values) => {
-    console.log("helloo1", values);
-    console.log("client is", personName);
     bgadetailService
       .createBga(values)
       .then((res) => {
@@ -171,7 +169,7 @@ export default function App() {
     let SubmissionTime = calculateTotalTime(values);
     values.Submission = SubmissionTime;
     setNewRows((prevRows) => [...prevRows, values]);
-    setRows([]);
+    setToggleInputTable(false);
   };
 
   const handleChange = (event) => {
@@ -193,6 +191,7 @@ export default function App() {
 
   const handleOpen = () => {
     console.log("client name is", clientId);
+    setToggleInputTable(true);
     setIsAddBgaClicked(true);
     setOpen(true);
   };
@@ -228,7 +227,7 @@ export default function App() {
 
       <div
         style={{
-          border: "1px solid red",
+          // border: "1px solid red",
           display: "flex",
           justifyContent: "center",
         }}
@@ -259,13 +258,13 @@ export default function App() {
               variant="contained"
               onClick={handleOpen}
             >
-              <b>Add Data</b>
+              Select Client
             </Button>
           </FormControl>
         </div>
       </div>
 
-      {isAddBgaClicked && (
+      {toggleInputTable && (
         <Formik
           initialValues={initialRow}
           onSubmit={handleAddRow}
@@ -273,7 +272,7 @@ export default function App() {
         >
           {({ values, handleChange, handleSubmit }) => (
             <form onSubmit={handleSubmit}>
-              <TableContainer sx={{ ml: 8, maxWidth: 1400, tableborder: 10 }}>
+              <TableContainer sx={{ ml: 1, maxWidth: 1400, tableborder: 10 }}>
                 <Table
                   sx={{ Width: 650, mt: 10 }}
                   aria-label="customized table"
@@ -379,7 +378,7 @@ export default function App() {
       )}
       {newRows.length > 0 && (
         <div>
-          <TableContainer sx={{ ml: 8, maxWidth: 1400, mt: 10 }}>
+          <TableContainer sx={{ ml: 1, maxWidth: 1400, mt: 10 }}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
                 <TableRow>
@@ -397,9 +396,7 @@ export default function App() {
                     Carrier Scrub
                   </StyledTableCell>
 
-                  <StyledTableCell align="center">
-                    Submission(min)
-                  </StyledTableCell>
+                  <StyledTableCell align="center">Total (min)</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

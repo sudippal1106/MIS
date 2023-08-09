@@ -69,12 +69,14 @@ export default function Home() {
       </div>
       <div>
         <FormControl sx={{ m: 1, width: 300, mt: 5, ml: 80 }}>
-          <InputLabel id="demo-multiple-name-label">MIS</InputLabel>
+          <InputLabel id="demo-multiple-name-label">Choose Dept.</InputLabel>
           <Select
+            labelId="demo-multiple-name-label"
             value={selectDepartment}
             onChange={handleChange}
-            input={<OutlinedInput />}
+            // input={<OutlinedInput />}
             MenuProps={MenuProps}
+            label="Choose Dept."
           >
             {department?.map((e) => (
               <MenuItem
